@@ -4,13 +4,14 @@ Run a MySQL query and get information about its execution.
 
 Example command line:
 
-python runquery.py MYDB myhost "Mypassword" test.sql
+python runquery.py database hostname username password sqlscriptname
 
 Arguments:
 
-dbname - Name of the MySQL database that you want to use when you connect.
+database - Name of the MySQL database that you want to use when you connect.
 hostname - Name of the host that MySQL is running on.
-password - Password for the MYUSER user on this MySQL system.
+username - Name of the MySQL user to login as
+password - Password for username
 sqlscriptname - Name of a text file containing the SELECT statement that we are going to run.
 
 Output:
@@ -30,31 +31,28 @@ To run this on my laptop I had to install the MySQL Python connector like this:
 
 pip install mysql-connector
 
-I am running this version of Python on my laptop:
-
-Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:04:45) [MSC v.1900 32 bit (Intel)] on win32
-
 """
 
 import mysql.connector
 import time
 import sys
 
-if len(sys.argv) != 5:
-    print("Usage: runquery.py dbname hostname MYUSERpassword sqlscriptname")
+if len(sys.argv) != 6:
+    print("Usage: runquery.py database hostname username password sqlscriptname")
     sys.exit(-1)
 
 dbname = sys.argv[1]
 hostname = sys.argv[2]
-password = sys.argv[3]
-sqlscript = sys.argv[4]
+username = sys.argv[3]
+password = sys.argv[4]
+sqlscript = sys.argv[5]
 
 with open(sqlscript, 'r') as sqlfile:
     query=sqlfile.read()
 
 before_connect = time.time()
 
-cnx = mysql.connector.connect(user='MYUSER', password=password,
+cnx = mysql.connector.connect(user=username, password=password,
                               host=hostname,
                               database=dbname)
                               
