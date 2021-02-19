@@ -4,12 +4,13 @@ Run a MySQL query and get information about its execution.
 
 Example command line:
 
-python runquery.py database hostname username password sqlscriptname
+python runquery.py database hostname portnum username password sqlscriptname
 
 Arguments:
 
 database - Name of the MySQL database that you want to use when you connect.
 hostname - Name of the host that MySQL is running on.
+portnum - Port number MySQL is listening on
 username - Name of the MySQL user to login as
 password - Password for username
 sqlscriptname - Name of a text file containing the SELECT statement that we are going to run.
@@ -37,15 +38,16 @@ import mysql.connector
 import time
 import sys
 
-if len(sys.argv) != 6:
-    print("Usage: runquery.py database hostname username password sqlscriptname")
+if len(sys.argv) != 7:
+    print("Usage: runquery.py database hostname portnum username password sqlscriptname")
     sys.exit(-1)
 
 dbname = sys.argv[1]
 hostname = sys.argv[2]
-username = sys.argv[3]
-password = sys.argv[4]
-sqlscript = sys.argv[5]
+portnum = sys.argv[3]
+username = sys.argv[4]
+password = sys.argv[5]
+sqlscript = sys.argv[6]
 
 with open(sqlscript, 'r') as sqlfile:
     query=sqlfile.read()
@@ -53,7 +55,7 @@ with open(sqlscript, 'r') as sqlfile:
 before_connect = time.time()
 
 cnx = mysql.connector.connect(user=username, password=password,
-                              host=hostname,
+                              host=hostname,port=portnum,
                               database=dbname)
                               
 after_connect = time.time()
